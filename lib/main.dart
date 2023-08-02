@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _controller;
-  late List<String> items = [];
+  late List<dynamic> items = [];
   late String text = '';
 
   @override
@@ -58,20 +57,18 @@ class _MyHomePageState extends State<MyHomePage> {
     final result = data
         .where((map) => map["models"].contains(search) ? true : false)
         .toList();
-    // if (!result.isNull) {
-    //   List<dynamic> honda = result[0]["models"];
-    //   print("result");
+    if (result.length != 0) {
+      List<dynamic> honda = result[0]["models"]
+          .where((i) => i.contains(search) ? true : false)
+          .toList();
 
-    //   print(honda);
-    // }
+      setState(() {
+        items = honda;
+      });
+      print("result");
 
-    // final List<String> getData = [];
-    // if (result != []) {
-    //   items = result[0]['models'];
-    // }
-    // print(getData);
-
-    setState(() {});
+      print(honda);
+    }
   }
 
   @override
@@ -98,13 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelText: 'Input',
               ),
             ),
-            // Expanded(
-            //   child: ListView.builder(
-            //     itemCount: items.length,
-            //     itemBuilder: (BuildContext context, int index) =>
-            //         Text(items[index]),
-            //   ),
-            // )
+            Expanded(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    Text(items[index]),
+              ),
+            )
           ],
         ),
       ),
